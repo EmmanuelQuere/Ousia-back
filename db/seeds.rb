@@ -7,6 +7,8 @@ Order.destroy_all
   new_user = User.create!(
     email: Faker::Name.first_name + "@yopmail.com",
     password: "azerty",
+    first_name: Faker::Name.first_name,
+    last_name: Faker::Name.last_name
   )
   Cart.create!(user_id: new_user.id)
   puts "Create User and Cart"
