@@ -1,13 +1,21 @@
 class ItemsController < ApplicationController
   before_action :set_item, only: %i[ show edit update destroy ]
 
-  # GET /items or /items.json
+  # GET /items
   def index
     @items = Item.all
+    respond_to do |format|
+      format.html { }
+      format.json { render json: @items }
+    end
   end
 
-  # GET /items/1 or /items/1.json
+  # GET /items/1
   def show
+    respond_to do |format|
+      format.html { }
+      format.json { render json: @item }
+    end
   end
 
   # GET /items/new
