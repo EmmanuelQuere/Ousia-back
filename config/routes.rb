@@ -1,8 +1,9 @@
 Rails.application.routes.draw do
+  devise_for :admins
   mount RailsAdmin::Engine => '/admin', as: 'rails_admin'
+  devise_for :users
   resources :carts
   resources :items
-  devise_for :users
 
   resources :users, only: [:update, :show]
   get 'profile', to: 'users#profile'
