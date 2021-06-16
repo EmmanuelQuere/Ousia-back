@@ -1,7 +1,10 @@
+Admin.destroy_all
 User.destroy_all
 Item.destroy_all
 Cart.destroy_all
 Order.destroy_all
+
+Admin.create!(email: 'admin@admin.com', password: 'ousia123')
 
 5.times do
   new_user = User.create!(
