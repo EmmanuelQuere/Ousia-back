@@ -1,5 +1,6 @@
 class CartsController < ApplicationController
-  before_action :set_cart, only: %i[ show edit update destroy ]
+  before_action :set_cart, only: %i[ edit update destroy ]
+  before_action :authenticate_user!
 
   # GET /carts or /carts.json
   def index
@@ -8,6 +9,15 @@ class CartsController < ApplicationController
 
   # GET /carts/1 or /carts/1.json
   def show
+    @cart = Cart.find_by(user_id: current_user.id)
+    @cart_items = @cart.cart_items
+    json = @cart_items.to_a.map! do |cart_item|
+      cart_item.as_json.merge({
+        item: cart_item.item,
+        total: cart_item.total_price
+      })
+    end
+    render json: json
   end
 
   # GET /carts/new
