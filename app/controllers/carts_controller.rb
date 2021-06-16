@@ -1,5 +1,6 @@
 class CartsController < ApplicationController
-  before_action :set_cart, only: %i[ show edit update destroy ]
+  before_action :set_cart, only: %i[ edit update destroy ]
+  before_action :authenticate_user!
 
   # GET /carts or /carts.json
   def index
@@ -8,6 +9,8 @@ class CartsController < ApplicationController
 
   # GET /carts/1 or /carts/1.json
   def show
+    @cart = Cart.where(user_id: current_user.id).first.cart_items
+    render json: @cart
   end
 
   # GET /carts/new
