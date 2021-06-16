@@ -64,3 +64,7 @@ gem "rack-cors"
 gem "faker"
 
 gem "aws-sdk-s3"
+
+gem 'mailjet'
+
+gem 'letter_opener'
