@@ -24,16 +24,22 @@ class CartItemsController < ApplicationController
   def create
 
     new_params = cart_item_params.to_h.merge(cart: current_user.cart)
-    @cart_item = CartItem.new(new_params)
+    if CartItem.find_by(item_id:cart_item_params[:item_id], cart: current_user.cart)
+        current_quantity = CartItem.find_by(item_id:cart_item_params[:item_id], cart: current_user.cart).quantity
+        CartItem.find_by(item_id:cart_item_params[:item_id], cart: current_user.cart).update!(quantity: current_quantity+cart_item_params[:quantity].to_i)
+        render json: CartItem.find_by(item_id:cart_item_params[:item_id], cart: current_user.cart)
+    else
+        @cart_item = CartItem.new(new_params)
 
-    respond_to do |format|
-      if @cart_item.save
-        format.html { redirect_to @cart_item, notice: "Cart item was successfully created." }
-        format.json { render :show, status: :created, location: @cart_item }
-      else
-        format.html { render :new, status: :unprocessable_entity }
-        format.json { render json: @cart_item.errors, status: :unprocessable_entity }
-      end
+        respond_to do |format|
+          if @cart_item.save
+            format.html { redirect_to @cart_item, notice: "Cart item was successfully created." }
+            format.json { render :show, status: :created, location: @cart_item }
+          else
+            format.html { render :new, status: :unprocessable_entity }
+            format.json { render json: @cart_item.errors, status: :unprocessable_entity }
+          end
+        end
     end
   end
 
