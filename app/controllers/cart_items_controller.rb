@@ -39,6 +39,8 @@ class CartItemsController < ApplicationController
 
   # PATCH/PUT /cart_items/1 or /cart_items/1.json
   def update
+
+    puts cart_item_params
     respond_to do |format|
       if @cart_item.update(cart_item_params)
         format.html { redirect_to @cart_item, notice: "Cart item was successfully updated." }
@@ -62,11 +64,12 @@ class CartItemsController < ApplicationController
   private
     # Use callbacks to share common setup or constraints between actions.
     def set_cart_item
-      @cart_item = CartItem.find_by(cart: current_user.cart, item_id: params[:item_id])
+      @cart_item = CartItem.find(params[:id])
     end
-
+    
     # Only allow a list of trusted parameters through.
     def cart_item_params
-      params.require(:cart_item).permit(:item_id, :quantity)
+      puts params
+      params.require(:cart_item).permit(:item_id, :quantity, :id)
     end
 end
