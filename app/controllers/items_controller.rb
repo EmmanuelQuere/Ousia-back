@@ -4,17 +4,30 @@ class ItemsController < ApplicationController
   # GET /items
   def index
     @items = Item.all
+    json = @items.to_a.map! do |item|
+      item.as_json.merge({
+        images: item.images.attachments.map do |attachment|
+          url_for(attachment)
+        end
+      })
+    end
     respond_to do |format|
       format.html { }
-      format.json { render json: @items }
+      format.json { render json: json }
     end
   end
 
   # GET /items/1
   def show
+    json = @item.as_json.merge({
+      images: @item.images.attachments.map do |attachment|
+        url_for(attachment)
+      end
+      })
+      
     respond_to do |format|
       format.html { }
-      format.json { render json: @item }
+      format.json { render json: json }
     end
   end
 
