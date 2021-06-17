@@ -11,13 +11,13 @@ class OrdersController < ApplicationController
       line_items: [
         {
           name: "Ousia",
-          amount: (@total * 100).to_i,
+          amount: (@total * 100).to_i + 1000,
           currency: "eur",
           quantity: 1,
         },
       ],
-      success_url: "http://localhost:3005" + "/stripe?success=true&session_id={CHECKOUT_SESSION_ID}&cart_id=#{cart_id}",
-      cancel_url: "http://localhost:3005" + '/stripe?canceled=true',
+      success_url: ENV['STRIPE_REDIRECT_URL'] + "/cart/recap?success=true&session_id={CHECKOUT_SESSION_ID}&cart_id=#{cart_id}",
+      cancel_url: ENV['STRIPE_REDIRECT_URL'] + '/cart/recap?canceled=true',
     )
     render json: { id: @session.id  }
   end
@@ -26,12 +26,16 @@ class OrdersController < ApplicationController
     @session = Stripe::Checkout::Session.retrieve(params[:session_id])
     @payment_intent = Stripe::PaymentIntent.retrieve(@session.payment_intent)
     payment_id = @payment_intent.id
-    @order = Order.create!(user:current_user, stripe_id: payment_id, status:"confirmed")
-    @cart = Cart.find(params[:cart_id])
-    @cart.cart_items.each do |cart_item|
-      OrderItem.create!(order:@order, item:cart_item.item, quantity: cart_item.quantity)
+    if Order.find_by(stripe_id:payment_id)
+      return render json: { order: Order.find_by(stripe_id:payment_id), status: :existing  }
+    else
+      @order = Order.create!(user:current_user, stripe_id: payment_id, status:"confirmed")
+      @cart = Cart.find(params[:cart_id])
+      @cart.cart_items.each do |cart_item|
+        OrderItem.create!(order:@order, item:cart_item.item, quantity: cart_item.quantity)
+      end
+      @cart.cart_items.destroy_all
+      render json: { order: @order, status: :created  }
     end
-    @cart.cart_items.destroy_all
-    render json: { order: @order, status: :created  }
   end
 end
