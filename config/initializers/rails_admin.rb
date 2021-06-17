@@ -13,20 +13,92 @@ RailsAdmin.config do |config|
     config.current_user_method(&:current_admin)
   end
 
-  ## == CancanCan ==
-  # config.authorize_with :cancancan
+  config.model 'User' do
+    list do
+      field :id
+      field :email
+      field :full_name
+      field :created_at
+    end
 
-  ## == Pundit ==
-  # config.authorize_with :pundit
+    show do
+      exclude_fields :jti
+    end
 
-  ## == PaperTrail ==
-  # config.audit_with :paper_trail, 'User', 'PaperTrail::Version' # PaperTrail >= 3.0.0
+    edit do
+      exclude_fields :jti, :password, :password_confirmation, :reset_password_sent_at, :remember_created_at, :orders
+    end
+  end
 
-  ### More at https://github.com/sferik/rails_admin/wiki/Base-configuration
+  config.model 'Item' do
+    list do
+      field :id
+      field :name
+      field :price
+      field :stock
+      field :updated_at
+    end
+  end
 
-  ## == Gravatar integration ==
-  ## To disable Gravatar integration in Navigation Bar set to false
-  # config.show_gravatar = true
+  config.model 'Cart' do
+    list do
+      field :id
+      field :user
+      field :created_at
+      field :updated_at
+    end
+
+    show do
+      field :id
+      field :user
+      field :items
+      field :resume_cart
+      field :total
+      field :created_at
+      field :updated_at
+    end
+  end
+
+  config.model 'Order' do
+    list do
+      field :id
+      field :user
+      field :status
+      field :order_items
+      field :items
+      field :created_at
+    end
+
+    show do
+      field :id
+      field :user
+      field :status
+      field :resume_order
+      field :total
+      field :created_at
+      field :updated_at
+    end
+
+    edit do
+      exclude_fields :user
+    end
+  end
+
+# Hide ActiveStorage models ---------------------
+  config.model 'ActiveStorage::Blob' do
+    visible false
+  end
+
+  config.model 'ActiveStorage::Attachment' do
+    visible false
+  end
+
+  config.model 'ActiveStorage::VariantRecord' do
+    visible false
+  end
+  # ---------------------------------------------
+
+  config.excluded_models = [OrderItem, CartItem]
 
   config.actions do
     dashboard                     # mandatory
@@ -44,5 +116,4 @@ RailsAdmin.config do |config|
     # history_show
   end
 
-  config.excluded_models = [OrderItem, CartItem]
 end

@@ -10,6 +10,10 @@ class Cart < ApplicationRecord
     end
     return sum
   end
+
+  def resume_cart
+    self.cart_items.map do |ci|
+      "#{ci.item.name}: x #{ci.quantity}"
+    end.join('</br>').html_safe
+  end
 end
-
-
