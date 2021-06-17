@@ -10,10 +10,18 @@ class User < ApplicationRecord
          :recoverable, :rememberable, :validatable,
          :jwt_authenticatable, jwt_revocation_strategy: self
 
-
   private
 
     def create_cart
       Cart.create(user_id: self.id)
     end
+
+  def full_name
+   if first_name.blank? && last_name.blank?
+     return "not completed"
+   else
+     return "#{first_name} #{last_name}"
+   end
+  end
+
 end
