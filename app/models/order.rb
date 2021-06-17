@@ -9,4 +9,8 @@ class Order < ApplicationRecord
     UserMailer.order_email(self).deliver_now
   end 
   
+  rails_admin do
+    exclude_fields :order_items
+  end
+
 end
