@@ -13,6 +13,7 @@ class CartsController < ApplicationController
     @cart_items = @cart.cart_items
     json = @cart_items.to_a.map! do |cart_item|
       cart_item.as_json.merge({
+        id: cart_item.id,
         item: cart_item.item,
         total: cart_item.total_price
       })
