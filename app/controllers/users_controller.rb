@@ -5,7 +5,13 @@ class UsersController < ApplicationController
   # GET /users/1
   def profile
     @user = User.find(current_user.id)
-    render json: @user
+    @order = Order.where(user_id: current_user.id)
+    
+    respond_to do |format|
+      format.json  { render :json => {:user => @user, 
+                                  :order => @order }}
+                                 #     render json: @user (include: [:doctor, :patient])
+      end 
   end
 
   def show
