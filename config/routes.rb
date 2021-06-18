@@ -13,4 +13,7 @@ Rails.application.routes.draw do
 
   # Route Stripe Checkout
   post 'create-checkout-session/:id', to: 'orders#create_payment', as: 'create-checkout-session'
+  devise_scope :admin do
+    root to: "devise/sessions#new"
+  end
 end
