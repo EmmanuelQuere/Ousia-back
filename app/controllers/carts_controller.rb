@@ -14,7 +14,10 @@ class CartsController < ApplicationController
     json = @cart_items.to_a.map! do |cart_item|
       cart_item.as_json.merge({
         item: cart_item.item,
-        total: cart_item.total_price
+        total: cart_item.total_price,
+        images: cart_item.item.images.attachments.map do |attachment|
+          url_for(attachment)
+        end
       })
     end
     render json: json

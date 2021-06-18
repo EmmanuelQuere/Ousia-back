@@ -63,10 +63,10 @@ end
 
 3.times do
   ordering_user = User.all.sample
-  new_order = Order.create!(user: ordering_user, status: 'confirmed')
+  new_order = Order.create!(user: ordering_user, status: 'payment_confirmed')
   puts "Create Order"
   ordered_item = Item.all.sample
   new_orderitem = OrderItem.create!(order: new_order, item: ordered_item, quantity: rand(1..3))
-  ordered_item.stock -= new_orderitem.quantity
+  new_order.update!(status:"confirmed")
   puts "Register Order Items"
 end
