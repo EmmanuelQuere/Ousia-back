@@ -5,7 +5,12 @@ class UsersController < ApplicationController
   # GET /users/1
   def profile
     @user = User.find(current_user.id)
-    render json: @user
+    @order = Order.where(user_id: current_user.id)
+    
+    respond_to do |format|
+      format.json  { render :json => {:user => @user, 
+                                  :order => @order }}
+      end 
   end
 
   def show
@@ -24,7 +29,7 @@ class UsersController < ApplicationController
   private
     # Use callbacks to share common setup or constraints between actions.
     def set_user
-      @user = User.find(params[:id])
+      @user = User.find(current_user.id)
     end
 
     # Only allow a list of trusted parameters through.
