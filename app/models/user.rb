@@ -1,8 +1,6 @@
 class User < ApplicationRecord
   include Devise::JWT::RevocationStrategies::JTIMatcher
-  after_create :welcome_send
-
-
+  after_create :welcome_send, if: -> { Rails.env.production? }
   after_create :create_cart
   has_one :cart
   has_many :orders

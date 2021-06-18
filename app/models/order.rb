@@ -1,5 +1,5 @@
 class Order < ApplicationRecord
-  after_create :send_mail
+  after_update :send_mail, if: -> { Rails.env.production? }
   belongs_to :user
   has_many :order_items, dependent: :destroy
   has_many :items, through: :order_items
@@ -19,8 +19,10 @@ class Order < ApplicationRecord
   end
 
   def send_mail
-    @user_id = self.user_id
-    UserMailer.order_email(self).deliver_now
+    if self.status == "confirmed"
+      @user_id = self.user_id
+      UserMailer.order_email(self).deliver_now
+    end
   end 
   
   rails_admin do
