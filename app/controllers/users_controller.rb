@@ -10,7 +10,6 @@ class UsersController < ApplicationController
     respond_to do |format|
       format.json  { render :json => {:user => @user, 
                                   :order => @order }}
-                                 #     render json: @user (include: [:doctor, :patient])
       end 
   end
 
