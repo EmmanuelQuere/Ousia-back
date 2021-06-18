@@ -5,9 +5,15 @@ Rails.application.routes.draw do
   devise_for :users
   resources :carts, except: [:show]
   resources :items
+  resources :orders, only: [:create]
 
   resources :users, only: [:update, :show]
   get 'profile', to: 'users#profile'
   get 'mycart', to: 'carts#show'
-  # For details on the DSL available within this file, see https://guides.rubyonrails.org/routing.html
+
+  # Route Stripe Checkout
+  post 'create-checkout-session/:id', to: 'orders#create_payment', as: 'create-checkout-session'
+  devise_scope :admin do
+    root to: "devise/sessions#new"
+  end
 end
