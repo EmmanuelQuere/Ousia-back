@@ -65,6 +65,10 @@ gem "faker"
 
 gem "aws-sdk-s3"
 
+gem 'mailjet'
+
+gem 'letter_opener'
+
 gem "rails_admin", "~> 2.1"
 
 gem 'stripe'
