@@ -29,11 +29,12 @@ class OrdersController < ApplicationController
     if Order.find_by(stripe_id:payment_id)
       return render json: { order: Order.find_by(stripe_id:payment_id), status: :existing  }
     else
-      @order = Order.create!(user:current_user, stripe_id: payment_id, status:"confirmed")
+      @order = Order.create!(user:current_user, stripe_id: payment_id, status:"payment_confirmed")
       @cart = Cart.find(params[:cart_id])
       @cart.cart_items.each do |cart_item|
         OrderItem.create!(order:@order, item:cart_item.item, quantity: cart_item.quantity)
       end
+      @order.update!(status:"confirmed")
       @cart.cart_items.destroy_all
       render json: { order: @order, status: :created  }
     end
