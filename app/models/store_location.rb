@@ -1,0 +1,2 @@
+class StoreLocation < ApplicationRecord
+end
