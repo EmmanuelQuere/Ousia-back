@@ -9,7 +9,7 @@ class UsersController < ApplicationController
     
     respond_to do |format|
       format.json  { render :json => {:user => @user, 
-                                  :order => @order }}
+                                  :order => @order.as_json(:include => {:order_items => {:include => :item}})}}
       end 
   end
 
