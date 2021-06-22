@@ -70,3 +70,7 @@ end
   new_order.update!(status:"confirmed")
   puts "Register Order Items"
 end
+
+store_1 = StoreLocation.create!(name:"Le Bon Marché Paris", lat:48.8511865639685, lng:2.3243520281959635)
+store_2 = StoreLocation.create!(name:"La Felicita", lat:48.833058545311616, lng:2.374774384353352)
+store_3 = StoreLocation.create!(name: "Aéroport Paris CDG", lat:49.01360658455695, lng:2.546330442236447)
