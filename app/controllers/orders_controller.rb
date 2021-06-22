@@ -8,6 +8,9 @@ class OrdersController < ApplicationController
     @session = Stripe::Checkout::Session.create(
       payment_method_types: ["card"],
       customer_email: @user.email,
+      shipping_address_collection: {
+        allowed_countries: ['FR', 'BE'],
+      },
       line_items: [
         {
           name: "Ousia",
@@ -16,7 +19,7 @@ class OrdersController < ApplicationController
           quantity: 1,
         },
       ],
-      success_url: ENV['STRIPE_REDIRECT_URL'] + "/cart/recap?success=true&session_id={CHECKOUT_SESSION_ID}&cart_id=#{cart_id}",
+      success_url: ENV['STRIPE_REDIRECT_URL'] + "/cart/recap?success=true&session_id={CHECKOUT_SESSION_ID}",
       cancel_url: ENV['STRIPE_REDIRECT_URL'] + '/cart/recap?canceled=true',
     )
     render json: { id: @session.id  }
@@ -30,7 +33,7 @@ class OrdersController < ApplicationController
       return render json: { order: Order.find_by(stripe_id:payment_id), status: :existing  }
     else
       @order = Order.create!(user:current_user, stripe_id: payment_id, status:"payment_confirmed")
-      @cart = Cart.find(params[:cart_id])
+      @cart = Cart.find_by(user_id:current_user.id)
       @cart.cart_items.each do |cart_item|
         OrderItem.create!(order:@order, item:cart_item.item, quantity: cart_item.quantity)
       end
