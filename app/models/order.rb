@@ -12,6 +12,11 @@ class Order < ApplicationRecord
     return sum
   end
 
+  def as_json(options={})
+    options[:methods] = [:total]
+    super
+  end
+
   def resume_order
     self.order_items.map do |oi|
       "#{oi.item.name}: x #{oi.quantity}"
