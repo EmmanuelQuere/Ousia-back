@@ -12,8 +12,12 @@ class Order < ApplicationRecord
     return sum
   end
 
+  def date
+    self.created_at.strftime('%d/%m/%Y')
+  end 
+
   def as_json(options={})
-    options[:methods] = [:total]
+    options[:methods] = [:total, :date]
     super
   end
 
