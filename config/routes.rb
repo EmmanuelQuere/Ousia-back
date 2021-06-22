@@ -6,6 +6,7 @@ Rails.application.routes.draw do
   resources :carts, except: [:show]
   resources :items
   resources :orders, only: [:create]
+  resources :store_locations, only: [:index]
 
   resources :users, only: [:update, :show]
   get 'profile', to: 'users#profile'
