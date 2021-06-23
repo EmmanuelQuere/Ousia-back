@@ -84,6 +84,16 @@ RailsAdmin.config do |config|
     end
   end
 
+  config.model 'StoreLocation' do
+    list do
+      field :id
+      field :name
+      field :lng
+      field :lat
+      field :category
+    end
+  end
+
 # Hide ActiveStorage models ---------------------
   config.model 'ActiveStorage::Blob' do
     visible false
