@@ -22,12 +22,11 @@ class User < ApplicationRecord
       Cart.create(user_id: self.id)
     end
 
-  def full_name
-   if first_name.blank? && last_name.blank?
-     return "not completed"
-   else
-     return "#{first_name} #{last_name}"
-   end
-  end
-        
+    def full_name
+      if first_name.blank? && last_name.blank?
+        return "not completed"
+      else
+        return "#{first_name} #{last_name}"
+      end
+    end        
 end

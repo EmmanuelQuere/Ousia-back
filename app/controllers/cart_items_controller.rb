@@ -67,7 +67,7 @@ class CartItemsController < ApplicationController
     else
       respond_to do |format|
         format.html { redirect_to cart_items_url, status: :unprocessable_entity }
-        format.json { render json: {message:"Something went wrong."}, status: :unprocessable_entity }
+        format.json { render :json => {:error => "not-found"}.to_json, :status => 404 }
       end
     end
 
