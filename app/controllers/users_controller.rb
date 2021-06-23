@@ -6,10 +6,14 @@ class UsersController < ApplicationController
   def profile
     @user = User.find(current_user.id)
     @order = Order.where(user_id: current_user.id)
+  
     
     respond_to do |format|
       format.json  { render :json => {:user => @user, 
-                                  :order => @order }}
+                                  :order => @order.as_json(:include => {:order_items.as_json => {:include => :item}}
+                                  )
+                                }
+                                }
       end 
   end
 

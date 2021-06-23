@@ -12,6 +12,15 @@ class Order < ApplicationRecord
     return sum
   end
 
+  def date
+    self.created_at.strftime('%d/%m/%Y')
+  end 
+
+  def as_json(options={})
+    options[:methods] = [:total, :date]
+    super
+  end
+
   def resume_order
     self.order_items.map do |oi|
       "#{oi.item.name}: x #{oi.quantity}"
