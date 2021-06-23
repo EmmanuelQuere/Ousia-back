@@ -7,6 +7,7 @@ Rails.application.routes.draw do
   resources :items
   resources :orders, only: [:create]
   resources :store_locations, only: [:index]
+  resources :newsletter_subscribers, only: [:create]
 
   resources :users, only: [:update, :show]
   get 'profile', to: 'users#profile'

@@ -9,7 +9,7 @@ class NewsletterSubscribersController < ApplicationController
 
     respond_to do |format|
       if @subscriber.save
-        format.json { render :json, status: :created, location: @subscriber }
+        format.json { render json: @subscriber, status: :created }
       else
         format.json { render json: @subscriber.errors, status: :unprocessable_entity }
       end
