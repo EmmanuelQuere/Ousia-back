@@ -36,7 +36,7 @@ Other gems employed:
 
 ## How to run locally
 
-After cloning this repository (or downloading and unzipping it), run `bundle install` in the CLI to install necessary gems, and `rails db:create db:migrate db:seed` to set up the database. Create a `.env` file at the root of the directory and add a randomly generated DEVISE_JWT_SECRET_KEY secret key, which you can obtain by running `rake secret` in the CLI.
+After cloning this repository (or downloading and unzipping it), run `bundle install` in the CLI to install necessary gems, and `rails db:create db:migrate db:seed` to set up the database. Create a `.env` file at the root of the directory and add a randomly generated DEVISE_JWT_SECRET_KEY secret key, which you can obtain by running `rake secret` in the CLI. The `.env` file will also need Stripe, Mailjet and a redirect URL towards the front-end website in order to work properly.
 
 Run `rails server` to start the server on local port 3000.
 
