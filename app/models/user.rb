@@ -5,6 +5,7 @@ class User < ApplicationRecord
   after_create :add_to_mailing_list
   has_one :cart
   has_many :orders
+  validates :email, presence: true
   # Include default devise modules. Others available are:
   # :confirmable, :lockable, :timeoutable, :trackable and :omniauthable
   devise :database_authenticatable, :registerable,
@@ -27,11 +28,11 @@ class User < ApplicationRecord
   end
 
   def full_name
-   if first_name.blank? && last_name.blank?
-     return "not completed"
-   else
-     return "#{first_name} #{last_name}"
-   end
-  end
+    if first_name.blank? && last_name.blank?
+      return "not completed"
+    else
+      return "#{first_name} #{last_name}"
+    end
+  end        
 
 end

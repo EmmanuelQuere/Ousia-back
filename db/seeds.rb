@@ -4,6 +4,7 @@ Item.destroy_all
 Cart.destroy_all
 Order.destroy_all
 NewsletterSubscriber.destroy_all
+StoreLocation.destroy_all
 
 Admin.create!(email: 'admin@admin.com', password: 'ousia123')
 

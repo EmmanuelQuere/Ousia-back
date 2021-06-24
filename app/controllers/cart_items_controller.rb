@@ -22,12 +22,12 @@ class CartItemsController < ApplicationController
 
   # POST /cart_items or /cart_items.json
   def create
-
+    @existing_item = CartItem.find_by(item_id: cart_item_params[:item_id], cart: current_user.cart)
     new_params = cart_item_params.to_h.merge(cart: current_user.cart)
-    if CartItem.find_by(item_id:cart_item_params[:item_id], cart: current_user.cart)
-        current_quantity = CartItem.find_by(item_id:cart_item_params[:item_id], cart: current_user.cart).quantity
-        CartItem.find_by(item_id:cart_item_params[:item_id], cart: current_user.cart).update!(quantity: current_quantity+cart_item_params[:quantity].to_i)
-        render json: CartItem.find_by(item_id:cart_item_params[:item_id], cart: current_user.cart)
+    if @existing_item
+        current_quantity = @existing_item.quantity
+        @existing_item.update!(quantity: current_quantity + cart_item_params[:quantity].to_i)
+        render json: @existing_item
     else
         @cart_item = CartItem.new(new_params)
 
@@ -58,11 +58,19 @@ class CartItemsController < ApplicationController
 
   # DELETE /cart_items/1 or /cart_items/1.json
   def destroy
-    @cart_item.destroy
-    respond_to do |format|
-      format.html { redirect_to cart_items_url, notice: "Cart item was successfully destroyed." }
-      format.json { head :no_content }
+    if @cart_item.cart.user == current_user
+      @cart_item.destroy
+      respond_to do |format|
+        format.html { redirect_to cart_items_url, notice: "Cart item was successfully destroyed." }
+        format.json { head :no_content }
+      end
+    else
+      respond_to do |format|
+        format.html { redirect_to cart_items_url, status: :unprocessable_entity }
+        format.json { render :json => {:error => "not-found"}.to_json, :status => 404 }
+      end
     end
+
   end
 
   private
