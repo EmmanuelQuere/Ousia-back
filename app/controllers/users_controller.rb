@@ -1,12 +1,10 @@
 class UsersController < ApplicationController
   before_action :authenticate_user!, only: [:show, :profile]
-  before_action :set_user, only: [:show, :update]
+  before_action :set_user, only: [:profile, :show, :update]
 
   # GET /users/1
   def profile
-    @user = User.find(current_user.id)
-    @order = Order.where(user_id: current_user.id)
-  
+    @order = @user.orders 
     
     respond_to do |format|
       format.json  { render :json => {:user => @user, 
@@ -33,7 +31,7 @@ class UsersController < ApplicationController
   private
     # Use callbacks to share common setup or constraints between actions.
     def set_user
-      @user = User.find(current_user.id)
+      @user = current_user
     end
 
     # Only allow a list of trusted parameters through.
