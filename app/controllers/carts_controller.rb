@@ -1,26 +1,34 @@
 class CartsController < ApplicationController
   before_action :set_cart, only: %i[ edit update destroy ]
-  before_action :authenticate_user!
+  before_action :authenticate_admin!, only: %i[ index ]
 
   # GET /carts or /carts.json
   def index
-    @carts = Cart.all
+    if current_admin
+      @carts = Cart.all
+    else
+      render :json => {:error => "not-found"}.to_json, :status => 404
+    end
   end
 
   # GET /carts/1 or /carts/1.json
   def show
     @cart = Cart.find_by(user_id: current_user.id)
-    @cart_items = @cart.cart_items
-    json = @cart_items.to_a.map! do |cart_item|
-      cart_item.as_json.merge({
-        item: cart_item.item,
-        total: cart_item.total_price,
-        images: cart_item.item.images.attachments.map do |attachment|
-          url_for(attachment)
-        end
-      })
+    if !@cart
+      render :json => {:error => "not-found"}.to_json, :status => 404
+    else
+      @cart_items = @cart.cart_items
+      json = @cart_items.to_a.map! do |cart_item|
+        cart_item.as_json.merge({
+          item: cart_item.item,
+          total: cart_item.total_price,
+          images: cart_item.item.images.attachments.map do |attachment|
+            url_for(attachment)
+          end
+        })
+      end
+      render json: json
     end
-    render json: json
   end
 
   # GET /carts/new
@@ -34,7 +42,7 @@ class CartsController < ApplicationController
 
   # POST /carts or /carts.json
   def create
-    @cart = Cart.new(cart_params)
+    @cart = Cart.new(cart_params, user_id: current_user.id)
 
     respond_to do |format|
       if @cart.save
@@ -62,10 +70,14 @@ class CartsController < ApplicationController
 
   # DELETE /carts/1 or /carts/1.json
   def destroy
-    @cart.destroy
-    respond_to do |format|
-      format.html { redirect_to carts_url, notice: "Cart was successfully destroyed." }
-      format.json { head :no_content }
+    if @cart.user == current_user
+      @cart.destroy
+      respond_to do |format|
+        format.html { redirect_to carts_url, notice: "Cart was successfully destroyed." }
+        format.json { head :no_content }
+      end
+    else
+      render :json => {:error => "not-found"}.to_json, :status => 404
     end
   end
 
