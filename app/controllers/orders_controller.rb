@@ -14,7 +14,7 @@ class OrdersController < ApplicationController
       line_items: [
         {
           name: "Ousia",
-          amount: (@total * 100).to_i + 1000,
+          amount: (@total * 100).to_i,
           currency: "eur",
           quantity: 1,
         },
